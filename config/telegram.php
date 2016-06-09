@@ -13,7 +13,7 @@ return [
     | https://core.telegram.org/bots#botfather
     |
     */
-    'bot_token' => env('TELEGRAM_BOT_TOKEN', 'YOUR-BOT-TOKEN'),
+    'bot_token' => env('TELEGRAM_BOT_TOKEN', 'YOUR_BOT_TOKEN'),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,5 +57,7 @@ return [
     */
     'commands' => [
         Telegram\Bot\Commands\HelpCommand::class,
+        App\Commands\StartCommand::class,
+        App\Commands\LaporCommand::class,
     ],
 ];
