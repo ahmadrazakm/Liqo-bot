@@ -1,0 +1,235 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: group; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+--
+
+CREATE TABLE "group" (
+    id integer NOT NULL,
+    name character(32) NOT NULL
+);
+
+
+ALTER TABLE "group" OWNER TO root;
+
+--
+-- Name: group_user; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+--
+
+CREATE TABLE group_user (
+    group_id integer NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE group_user OWNER TO root;
+
+--
+-- Name: report; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+--
+
+CREATE TABLE report (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL,
+    date date NOT NULL,
+    "time" time without time zone NOT NULL
+);
+
+
+ALTER TABLE report OWNER TO root;
+
+--
+-- Name: report_id_seq; Type: SEQUENCE; Schema: public; Owner: root
+--
+
+CREATE SEQUENCE report_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE report_id_seq OWNER TO root;
+
+--
+-- Name: report_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
+--
+
+ALTER SEQUENCE report_id_seq OWNED BY report.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: root; Tablespace: 
+--
+
+CREATE TABLE "user" (
+    id integer NOT NULL,
+    username character(32)
+);
+
+
+ALTER TABLE "user" OWNER TO root;
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY report ALTER COLUMN id SET DEFAULT nextval('report_id_seq'::regclass);
+
+
+--
+-- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY "group" (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: group_user; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY group_user (group_id, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: report; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY report (id, user_id, group_id, date, "time") FROM stdin;
+\.
+
+
+--
+-- Name: report_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('report_id_seq', 1, false);
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: root
+--
+
+COPY "user" (id, username) FROM stdin;
+\.
+
+
+--
+-- Name: group_id; Type: CONSTRAINT; Schema: public; Owner: root; Tablespace: 
+--
+
+ALTER TABLE ONLY "group"
+    ADD CONSTRAINT group_id PRIMARY KEY (id);
+
+
+--
+-- Name: group_user_group_id_user_id; Type: CONSTRAINT; Schema: public; Owner: root; Tablespace: 
+--
+
+ALTER TABLE ONLY group_user
+    ADD CONSTRAINT group_user_group_id_user_id PRIMARY KEY (group_id, user_id);
+
+
+--
+-- Name: report_id; Type: CONSTRAINT; Schema: public; Owner: root; Tablespace: 
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT report_id PRIMARY KEY (id);
+
+
+--
+-- Name: report_user_id_group_id_date; Type: CONSTRAINT; Schema: public; Owner: root; Tablespace: 
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT report_user_id_group_id_date UNIQUE (user_id, group_id, date);
+
+
+--
+-- Name: user_id; Type: CONSTRAINT; Schema: public; Owner: root; Tablespace: 
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT user_id PRIMARY KEY (id);
+
+
+--
+-- Name: group_user_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY group_user
+    ADD CONSTRAINT group_user_group_id_fkey FOREIGN KEY (group_id) REFERENCES "group"(id);
+
+
+--
+-- Name: group_user_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY group_user
+    ADD CONSTRAINT group_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+
+
+--
+-- Name: report_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT report_group_id_fkey FOREIGN KEY (group_id) REFERENCES "group"(id);
+
+
+--
+-- Name: report_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: root
+--
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT report_user_id_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

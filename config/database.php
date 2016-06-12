@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,6 +52,7 @@ return [
             'prefix' => '',
         ],
 
+        /** heroku
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', 'localhost'),
@@ -73,6 +74,33 @@ return [
             'database' => env('DB_DATABASE', 'dblcabhkrqd71t'),
             'username' => env('DB_USERNAME', 'frewzhnzhdxjpy'),
             'password' => env('DB_PASSWORD', 'xRmWifBLazvAE3hdfDReP2hs4d'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+        ],
+        */
+
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'liqo-bot'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'liqo-bot'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',

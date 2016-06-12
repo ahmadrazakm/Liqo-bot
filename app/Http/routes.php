@@ -16,6 +16,9 @@ Route::get('/', function () {
 });
 
 Route::get('/me', 'BotController@me');
+Route::get('/stats/{username}', 'BotController@stats');
+Route::get('/test', 'BotController@test');
+
 Route::get('/setWebhook', 'BotController@setWebhook');
 Route::post('/<token>/webhook', function () {
     $update = Telegram::commandsHandler(true);

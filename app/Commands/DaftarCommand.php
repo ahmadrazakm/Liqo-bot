@@ -3,23 +3,23 @@
 namespace App\Commands;
 
 use App\Group;
-use App\Report;
+use App\GroupUser;
 use App\User;
 
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
 
-class LaporCommand extends Command
+class DaftarCommand extends Command
 {
     /**
      * @var string Command Name
      */
-    protected $name = "lapor";
+    protected $name = "daftar";
 
     /**
      * @var string Command Description
      */
-    protected $description = "Buat Ngelapor";
+    protected $description = "Buat daftar di suatu grup";
 
     /**
      * @inheritdoc
@@ -31,25 +31,22 @@ class LaporCommand extends Command
 
         // TODO cek group/user nya udah ada atau belum
         $group = Group::where('id', $message->getChat()->getId())->first();
-        $user = User::where('id', $message->getFrom()->getId())->first();
+        $user = User::firstOrCreate($message->getFrom()->getId());
 
-        $report = new Report;
-        $report->user_id = $group->id;
-        $report->group_id = $user->id;
-        $time = Carbon::createFromTimestamp($message->getDate(), 'Asia/Jakarta');
-        $report->date = $time;
-        $report->time = $time;
+        $groupUser = new GroupUser;
+        $groupUser->group_id = $group->id;
+        $groupUser->user_id = $user->id;
 
         $response = '';
         try {
-             $report->save();
-             $response .= sprintf('ok, laporan @%s diterima pada %s di grup liqo %s' . PHP_EOL, $message->getFrom()->getUsername(), $time->toDateTimeString(), $group->name);
+             $groupUser->save();
+             $response .= sprintf('ok, @%s berhasil mendaftar di grup liqo %s' . PHP_EOL, $message->getFrom()->getUsername(), $group->name);
         } catch (\Exception $e) {
              $errorCode = $e->errorInfo[1];
 
              // unique constraint
              if($errorCode == 1062) {
-                 $response .= sprintf('hmm, error. mungkin @%s sudah lapor hari ini?' .PHP_EOL, $message->getFrom()->getUsername());
+                 $response .= sprintf('hmm, error. mungkin @%s sudah terdaftar?' .PHP_EOL, $message->getFrom()->getUsername());
              }
         }
 
